@@ -1,29 +1,22 @@
-import { Code, Text } from "@geist-ui/core"
+import { Text } from "@geist-ui/core"
+import Demo from "./demo"
+import { contentOptions } from "./demo/data"
 
-export default function Section() {
+const Section = ({ content }: contentOptions) => {
   return (
-    <div className="flex w-full flex-col items-center justify-between space-y-4 lg:flex-row lg:space-y-0 lg:space-x-8">
-      <div className="w-full lg:w-1/2">
-        <Code width="100%" block my={0} px={1} py={0}>
-          {/* <SyntaxHighlighter language="typescript" style={irBlack} customStyle={""}> */}
-          {`
-import { someFunc, type BaseType } from './some-module.ts'
+    <div className="flex w-full flex-col items-center justify-between space-y-4 lg:flex-row lg:space-y-0 lg:space-x-8 xl:space-x-12">
+      <Demo content={content} />
 
-// BaseType is always guaranteed to be erased
-// and someFunc will be preserved
-export class Thing implements BaseType {
-  someMethod() {
-    someFunc()
-  }
-}
-          `}
-          {/* </SyntaxHighlighter> */}
-        </Code>
-      </div>
       <div className="w-full lg:w-1/2">
-        <Text h2>Test</Text>
-        <Text p>abcdefabcdefabcdef</Text>
+        <Text h3>Failed referential equality</Text>
+        <Text p>
+          Updating the array in state creates a shallow copy pointing to the
+          same memory address. It doesn't re-render since React considers it
+          unchanged, because of the unchanged memory location.
+        </Text>
       </div>
     </div>
   )
 }
+
+export default Section
