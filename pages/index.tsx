@@ -26,6 +26,7 @@ export default function Home() {
           Referential Equality
         </Text>
         <Section content="refEq1" />
+        <Section content="refEq2" />
       </main>
     </div>
   )

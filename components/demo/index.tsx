@@ -3,6 +3,7 @@ import { useState } from "react"
 import RefEq1 from "./refEq1"
 
 import contents, { contentOptions } from "./data"
+import RefEq2 from "./refEq2"
 
 export default function Demo({ content }: contentOptions) {
   const [viewingCode, setViewingCode] = useState(true)
@@ -29,7 +30,7 @@ export default function Demo({ content }: contentOptions) {
           {contents[content].code}
         </Code>
       ) : (
-        <Example content="refEq1" />
+        <Example content={content} />
       )}
     </div>
   )
@@ -37,5 +38,6 @@ export default function Demo({ content }: contentOptions) {
 
 function Example({ content }: contentOptions) {
   if (content === "refEq1") return <RefEq1 />
+  if (content === "refEq2") return <RefEq2 />
   return null
 }
