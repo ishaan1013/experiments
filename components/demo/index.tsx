@@ -1,9 +1,10 @@
-import { Button, Code } from "@geist-ui/core"
+import { Button, Card, Code } from "@geist-ui/core"
 import { useState } from "react"
 import RefEq1 from "./refEq1"
 
 import contents, { contentOptions } from "./data"
 import RefEq2 from "./refEq2"
+import Kanban1 from "./kanban1"
 
 export default function Demo({ content }: contentOptions) {
   const [viewingCode, setViewingCode] = useState(true)
@@ -16,7 +17,9 @@ export default function Demo({ content }: contentOptions) {
       <Button
         onClick={() => setViewingCode((prev) => !prev)}
         scale={2 / 3}
-        className="!absolute right-2 bottom-2 z-20">
+        className="!absolute right-2 bottom-2 z-20"
+        type="success"
+        ghost>
         {viewingCode ? "Interactive Example" : "See Code"}
       </Button>
       {viewingCode ? (
@@ -37,7 +40,23 @@ export default function Demo({ content }: contentOptions) {
 }
 
 function Example({ content }: contentOptions) {
-  if (content === "refEq1") return <RefEq1 />
-  if (content === "refEq2") return <RefEq2 />
+  if (content === "refEq1")
+    return (
+      <Card className="min-h-[18rem] w-full">
+        <RefEq1 />
+      </Card>
+    )
+  if (content === "refEq2")
+    return (
+      <Card className="min-h-[18rem] w-full">
+        <RefEq2 />
+      </Card>
+    )
+  if (content === "kanban1")
+    return (
+      <Card className="min-h-[18rem] w-full">
+        <Kanban1 />
+      </Card>
+    )
   return null
 }

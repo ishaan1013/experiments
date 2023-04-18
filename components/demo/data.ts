@@ -44,10 +44,23 @@ return (
     heading: "Successful re-render",
     desc: "Using the spread operator creates a deep copy of the object. Points to a new memory location.",
   },
+  kanban1: {
+    code: `
+const [items, setItems] = useState(["item", "item"])
+
+return (
+  <>
+    yes
+  </>
+)
+  `,
+    heading: "Re-renders entire board",
+    desc: "bad example bad example bad example bad example bad example bad example ",
+  },
 }
 
 export type contentOptions = {
-  content: "refEq1" | "refEq2"
+  content: "refEq1" | "refEq2" | "kanban1"
 }
 
 export default contents

@@ -5,7 +5,7 @@ export default function RefEq1() {
   const [items, setItems] = useState(["item", "item"])
 
   return (
-    <Card className="min-h-[18rem] w-full">
+    <>
       <div className="mb-4 flex w-full space-x-2 overflow-x-auto">
         {items.map((item, i) => (
           <div
@@ -25,6 +25,6 @@ export default function RefEq1() {
         Add Item
       </Button>
       <Text p>Check the console for updates</Text>
-    </Card>
+    </>
   )
 }

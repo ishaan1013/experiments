@@ -1,4 +1,4 @@
-import { Text, Button, Link, Divider } from "@geist-ui/core"
+import { Text, Button, Link, Divider, Spacer, Card } from "@geist-ui/core"
 import Head from "next/head"
 import { Github, Twitter } from "lucide-react"
 import Section from "../components/section"
@@ -13,13 +13,30 @@ export default function Home() {
 
       <main className="w-full max-w-screen-lg py-12">
         <Text h1>React Experiments</Text>
-        <Link href="#" color underline>
-          Referential Equality
-        </Link>
-        <div className="mt-4 space-x-2">
-          <Button type="success" ghost icon={<Github />} auto />
-          <Button type="success" ghost icon={<Twitter />} auto />
-        </div>
+        <Card>
+          <Card.Content>
+            <Text className="m-0" p type="secondary">
+              Contents
+            </Text>
+            <div className="mt-1 flex flex-col space-y-1">
+              <Link href="#" color underline>
+                Referential Equality
+              </Link>
+              <Link href="#" color underline>
+                Kanban Board Re-Renders
+              </Link>
+            </div>
+          </Card.Content>
+
+          <Divider h="1px" my={0} />
+
+          <Card.Content>
+            <div className="space-x-2">
+              <Button type="success" ghost icon={<Github />} auto />
+              <Button type="success" ghost icon={<Twitter />} auto />
+            </div>
+          </Card.Content>
+        </Card>
 
         <Divider my={4} />
         <Text h2 id="refeq">
@@ -27,6 +44,12 @@ export default function Home() {
         </Text>
         <Section content="refEq1" />
         <Section content="refEq2" />
+
+        <Divider my={4} />
+        <Text h2 id="refeq">
+          Kanban Board Re-Renders
+        </Text>
+        <Section content="kanban1" />
       </main>
     </div>
   )
