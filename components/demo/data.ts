@@ -20,7 +20,7 @@ return (
 )
   `,
     heading: "No re-render (object)",
-    desc: "Updating the array this way creates a shallow copy pointing to the same memory address. It doesn't re-render since React considers it unchanged, because of the unchanged memory location.",
+    desc: "Creates a shallow copy pointing to the same memory location. No re-render since React considers it unchanged (same address).",
   },
   refEq2: {
     code: `
@@ -46,21 +46,130 @@ return (
   },
   kanban1: {
     code: `
-const [items, setItems] = useState(["item", "item"])
+const Board = () => {
+  const [items, setItems] = useState([[1, 2, 3], [4, 5], [6]])
 
-return (
-  <>
-    yes
-  </>
-)
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}>
+      <SortableContext
+        items={items[0]}
+        strategy={verticalListSortingStrategy}>
+        {items[0].map((item) => (
+          <Item id={item} key={item} />
+        ))}
+      </SortableContext>
+      <SortableContext
+        items={items[1]}
+        strategy={verticalListSortingStrategy}>
+        {items[1].map((item) => (
+          <Item id={item} key={item} />
+        ))}
+      </SortableContext>
+      <SortableContext
+        items={items[2]}
+        strategy={verticalListSortingStrategy}>
+        {items[2].map((item) => (
+          <Item id={item} key={item} />
+        ))}
+      </SortableContext>
+    </DndContext>
+  )
+}
+
+const Item = ({id} : {id: number}) => {
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}>
+      <Text>
+        {id}
+      </Text>
+      <Button
+        onClick={...}
+        icon={... ? <ArrowRight /> : <ArrowLeft />}
+      />
+      <Button
+        onClick={...}
+        icon={... ? <ArrowRight /> : <ArrowLeft />}
+      />
+    </div>
+  )
+}
   `,
-    heading: "Re-renders entire board",
-    desc: "bad example bad example bad example bad example bad example bad example ",
+    heading: "Re-renders entire board (expensive)",
+    desc: "The entire board re-renders for all updates. For example with sorting items within a column, all columns update.",
+  },
+  kanban2: {
+    code: `
+const Board = () => {
+  const [items, setItems] = useState([[1, 2, 3], [4, 5], [6]])
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}>
+      <SortableContext
+        items={items[0]}
+        strategy={verticalListSortingStrategy}>
+        {items[0].map((item) => (
+          <Item id={item} key={item} />
+        ))}
+      </SortableContext>
+      <SortableContext
+        items={items[1]}
+        strategy={verticalListSortingStrategy}>
+        {items[1].map((item) => (
+          <Item id={item} key={item} />
+        ))}
+      </SortableContext>
+      <SortableContext
+        items={items[2]}
+        strategy={verticalListSortingStrategy}>
+        {items[2].map((item) => (
+          <Item id={item} key={item} />
+        ))}
+      </SortableContext>
+    </DndContext>
+  )
+}
+
+const Item = ({id} : {id: number}) => {
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}>
+      <Text>
+        {id}
+      </Text>
+      <Button
+        onClick={...}
+        icon={... ? <ArrowRight /> : <ArrowLeft />}
+      />
+      <Button
+        onClick={...}
+        icon={... ? <ArrowRight /> : <ArrowLeft />}
+      />
+    </div>
+  )
+}
+  `,
+    heading: "Re-renders only necessary components",
+    desc: "Sorting within a single column re-renders just that section, and moving between columns only updates the 2 sections involved.",
   },
 }
 
 export type contentOptions = {
-  content: "refEq1" | "refEq2" | "kanban1"
+  content: "refEq1" | "refEq2" | "kanban1" | "kanban2"
 }
 
 export default contents

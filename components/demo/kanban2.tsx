@@ -22,7 +22,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable"
 
-export default function Kanban1() {
+export default function Kanban2() {
   const [items, setItems] = useState([[1, 2, 3], [4, 5], [6]])
 
   const [activeCol, setActiveCol] = useState(0)
@@ -192,7 +192,7 @@ const Item = ({
       </Text>
       <Button
         padding={0.3}
-        type="error"
+        type="warning"
         onClick={
           col === 0
             ? () => moveRight({ item: id, col })
@@ -206,7 +206,7 @@ const Item = ({
       {col === 1 && (
         <Button
           padding={0.3}
-          type="error"
+          type="warning"
           onClick={() => moveRight({ item: id, col })}
           scale={1 / 3}
           ghost

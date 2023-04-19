@@ -5,6 +5,7 @@ import RefEq1 from "./refEq1"
 import contents, { contentOptions } from "./data"
 import RefEq2 from "./refEq2"
 import Kanban1 from "./kanban1"
+import Kanban2 from "./kanban2"
 
 export default function Demo({ content }: contentOptions) {
   const [viewingCode, setViewingCode] = useState(true)
@@ -56,6 +57,12 @@ function Example({ content }: contentOptions) {
     return (
       <Card className="min-h-[18rem] w-full">
         <Kanban1 />
+      </Card>
+    )
+  if (content === "kanban2")
+    return (
+      <Card className="min-h-[18rem] w-full">
+        <Kanban2 />
       </Card>
     )
   return null
