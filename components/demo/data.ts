@@ -44,6 +44,28 @@ return (
     heading: "Successful re-render",
     desc: "Using the spread operator creates a deep copy of the object. Points to a new memory location.",
   },
+  reducer: {
+    code: `
+const [items, setItems] = useState(["item", "item"])
+
+return (
+  <>
+    <div>
+      {items.map((item, i) =>
+        <div key={i}>{item}</div>
+      )}
+    </div>
+    <button onClick={() => {
+      const newItems = [...items]
+      newItems.push("item")
+      setItems(newItems)
+    }}>Add Item</button>
+  </>
+)
+  `,
+    heading: "Successful re-render",
+    desc: "Using the spread operator creates a deep copy of the object. Points to a new memory location.",
+  },
   kanban1: {
     code: `
 const Board = () => {
@@ -55,23 +77,17 @@ const Board = () => {
       collisionDetection={closestCenter}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}>
-      <SortableContext
-        items={items[0]}
-        strategy={verticalListSortingStrategy}>
+      <SortableContext items={items[0]} >
         {items[0].map((item) => (
           <Item id={item} key={item} />
         ))}
       </SortableContext>
-      <SortableContext
-        items={items[1]}
-        strategy={verticalListSortingStrategy}>
+      <SortableContext items={items[1]} >
         {items[1].map((item) => (
           <Item id={item} key={item} />
         ))}
       </SortableContext>
-      <SortableContext
-        items={items[2]}
-        strategy={verticalListSortingStrategy}>
+      <SortableContext items={items[2]} >
         {items[2].map((item) => (
           <Item id={item} key={item} />
         ))}
@@ -80,7 +96,7 @@ const Board = () => {
   )
 }
 
-const Item = ({id} : {id: number}) => {
+const Item = ({id, ...} : {id: number, ...}) => {
   return (
     <div
       ref={setNodeRef}
@@ -110,38 +126,44 @@ const Item = ({id} : {id: number}) => {
 const Board = () => {
   const [items, setItems] = useState([[1, 2, 3], [4, 5], [6]])
 
+  const items0 = useMemo(() => items[0], [items])
+  const items1 = useMemo(() => items[1], [items])
+  const items2 = useMemo(() => items[2], [items])
+
   return (
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}>
-      <SortableContext
-        items={items[0]}
-        strategy={verticalListSortingStrategy}>
-        {items[0].map((item) => (
-          <Item id={item} key={item} />
-        ))}
-      </SortableContext>
-      <SortableContext
-        items={items[1]}
-        strategy={verticalListSortingStrategy}>
-        {items[1].map((item) => (
-          <Item id={item} key={item} />
-        ))}
-      </SortableContext>
-      <SortableContext
-        items={items[2]}
-        strategy={verticalListSortingStrategy}>
-        {items[2].map((item) => (
-          <Item id={item} key={item} />
-        ))}
-      </SortableContext>
+      <Col col={0} items={items0} moveLeft={moveLeft} moveRight={moveRight} />
+      <Col col={1} items={items1} moveLeft={moveLeft} moveRight={moveRight} />
+      <Col col={2} items={items2} moveLeft={moveLeft} moveRight={moveRight} />
     </DndContext>
   )
 }
 
-const Item = ({id} : {id: number}) => {
+const Col = memo(
+  ({ items, col, moveLeft, moveRight }: { items: number[], col: 0 | 1 | 2, moveLeft: ({ item, col }: { item: number; col: 0 | 1 | 2 }) => void, moveRight: ({ item, col }: { item: number; col: 0 | 1 | 2 }) => void }) => {
+    return (
+      <Card>
+        <SortableContext items={items} >
+          {items.map((item) => (
+            <Item
+              id={item}
+              moveLeft={moveLeft}
+              moveRight={moveRight}
+              col={col}
+              key={item}
+            />
+          ))}
+        </SortableContext>
+      </Card>
+    )
+  }
+)
+
+const Item = ({id, ...} : {id: number, ...}) => {
   return (
     <div
       ref={setNodeRef}
@@ -169,7 +191,7 @@ const Item = ({id} : {id: number}) => {
 }
 
 export type contentOptions = {
-  content: "refEq1" | "refEq2" | "kanban1" | "kanban2"
+  content: "refEq1" | "refEq2" | "kanban1" | "kanban2" | "reducer"
 }
 
 export default contents

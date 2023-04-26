@@ -99,9 +99,7 @@ export default function Kanban2() {
   }
 
   const items0 = useMemo(() => items[0], [items])
-
   const items1 = useMemo(() => items[1], [items])
-
   const items2 = useMemo(() => items[2], [items])
 
   return (

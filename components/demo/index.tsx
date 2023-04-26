@@ -6,6 +6,7 @@ import contents, { contentOptions } from "./data"
 import RefEq2 from "./refEq2"
 import Kanban1 from "./kanban1"
 import Kanban2 from "./kanban2"
+import Reducer from "./reducer"
 
 export default function Demo({ content }: contentOptions) {
   const [viewingCode, setViewingCode] = useState(true)
@@ -13,7 +14,7 @@ export default function Demo({ content }: contentOptions) {
   return (
     <div className="relative z-0 w-full overflow-hidden lg:max-w-[50%]">
       {viewingCode && (
-        <div className="absolute bottom-0 z-10 h-16 w-full rounded-b-md bg-gradient-to-t from-[#101010] via-[#101010]/90 to-[#101010]/10" />
+        <div className="pointer-events-none absolute bottom-0 z-10 h-16 w-full rounded-b-md bg-gradient-to-t from-[#101010] via-[#101010]/90 to-[#101010]/10" />
       )}
       <Button
         onClick={() => setViewingCode((prev) => !prev)}
@@ -51,6 +52,12 @@ function Example({ content }: contentOptions) {
     return (
       <Card className="min-h-[18rem] w-full">
         <RefEq2 />
+      </Card>
+    )
+  if (content === "reducer")
+    return (
+      <Card className="min-h-[18rem] w-full">
+        <Reducer />
       </Card>
     )
   if (content === "kanban1")
