@@ -103,7 +103,7 @@ const Item = ({id} : {id: number}) => {
 }
   `,
     heading: "Re-renders entire board (expensive)",
-    desc: "The entire board re-renders for all updates. For example with sorting items within a column, all columns update.",
+    desc: "The entire board re-renders for all updates. Unaffected items/columns always re-render, but it's often unnecessary.",
   },
   kanban2: {
     code: `
@@ -163,8 +163,8 @@ const Item = ({id} : {id: number}) => {
   )
 }
   `,
-    heading: "Re-renders only necessary components",
-    desc: "Sorting within a single column re-renders just that section, and moving between columns only updates the 2 sections involved.",
+    heading: "Optimizing with memoization",
+    desc: "Each column is memoized to re-render only when directly updated. It takes an object prop, and memo() uses shallow comparison (the object won't be cached). The useMemo hook fixes this, and caches the object properly.",
   },
 }
 

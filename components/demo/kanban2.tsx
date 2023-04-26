@@ -1,6 +1,6 @@
 import { Button, Card, Text } from "@geist-ui/core"
 import { ArrowLeft, ArrowRight } from "lucide-react"
-import { useState } from "react"
+import { memo, useMemo, useState } from "react"
 
 import {
   DndContext,
@@ -98,6 +98,12 @@ export default function Kanban2() {
     }
   }
 
+  const items0 = useMemo(() => items[0], [items])
+
+  const items1 = useMemo(() => items[1], [items])
+
+  const items2 = useMemo(() => items[2], [items])
+
   return (
     <DndContext
       sensors={sensors}
@@ -105,116 +111,102 @@ export default function Kanban2() {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}>
       <div className="flex space-x-2">
-        <Card hoverable className="min-w-[90px]">
-          <Card.Content padding={0.5} paddingBottom={0.3}>
-            <SortableContext
-              items={items[0]}
-              strategy={verticalListSortingStrategy}>
-              {items[0].map((item) => (
-                <Item
-                  id={item}
-                  moveLeft={moveLeft}
-                  moveRight={moveRight}
-                  col={0}
-                  key={item}
-                />
-              ))}
-            </SortableContext>
-          </Card.Content>
-        </Card>
-        <Card hoverable className="min-w-[90px]">
-          <Card.Content padding={0.5} paddingBottom={0.3}>
-            <SortableContext
-              items={items[1]}
-              strategy={verticalListSortingStrategy}>
-              {items[1].map((item) => (
-                <Item
-                  id={item}
-                  moveLeft={moveLeft}
-                  moveRight={moveRight}
-                  col={1}
-                  key={item}
-                />
-              ))}
-            </SortableContext>
-          </Card.Content>
-        </Card>
-        <Card hoverable className="min-w-[90px]">
-          <Card.Content padding={0.5} paddingBottom={0.3}>
-            <SortableContext
-              items={items[2]}
-              strategy={verticalListSortingStrategy}>
-              {items[2].map((item) => (
-                <Item
-                  id={item}
-                  moveLeft={moveLeft}
-                  moveRight={moveRight}
-                  col={2}
-                  key={item}
-                />
-              ))}
-            </SortableContext>
-          </Card.Content>
-        </Card>
+        <Col col={0} items={items0} moveLeft={moveLeft} moveRight={moveRight} />
+        <Col col={1} items={items1} moveLeft={moveLeft} moveRight={moveRight} />
+        <Col col={2} items={items2} moveLeft={moveLeft} moveRight={moveRight} />
       </div>
     </DndContext>
   )
 }
 
-const Item = ({
-  id,
-  col,
-  moveLeft,
-  moveRight,
-}: {
-  id: number
-  col: 0 | 1 | 2
-  moveLeft: ({ item, col }: { item: number; col: 0 | 1 | 2 }) => void
-  moveRight: ({ item, col }: { item: number; col: 0 | 1 | 2 }) => void
-}) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: id })
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
+const Col = memo(
+  ({
+    items,
+    col,
+    moveLeft,
+    moveRight,
+  }: {
+    items: number[]
+    col: 0 | 1 | 2
+    moveLeft: ({ item, col }: { item: number; col: 0 | 1 | 2 }) => void
+    moveRight: ({ item, col }: { item: number; col: 0 | 1 | 2 }) => void
+  }) => {
+    return (
+      <Card hoverable className="min-w-[90px]">
+        <Card.Content padding={0.5} paddingBottom={0.3}>
+          <SortableContext items={items} strategy={verticalListSortingStrategy}>
+            {items.map((item) => (
+              <Item
+                id={item}
+                moveLeft={moveLeft}
+                moveRight={moveRight}
+                col={col}
+                key={item}
+              />
+            ))}
+          </SortableContext>
+        </Card.Content>
+      </Card>
+    )
   }
+)
 
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="mb-1 flex items-center rounded-md border border-[#111] bg-[#111111bf] px-4 py-2">
-      <Text margin={0} className="pr-2 text-center">
-        {id}
-      </Text>
-      <Button
-        padding={0.3}
-        type="warning"
-        onClick={
-          col === 0
-            ? () => moveRight({ item: id, col })
-            : () => moveLeft({ item: id, col })
-        }
-        scale={1 / 3}
-        ghost
-        icon={col === 0 ? <ArrowRight /> : <ArrowLeft />}
-        auto
-      />
-      {col === 1 && (
+const Item = memo(
+  ({
+    id,
+    col,
+    moveLeft,
+    moveRight,
+  }: {
+    id: number
+    col: 0 | 1 | 2
+    moveLeft: ({ item, col }: { item: number; col: 0 | 1 | 2 }) => void
+    moveRight: ({ item, col }: { item: number; col: 0 | 1 | 2 }) => void
+  }) => {
+    const { attributes, listeners, setNodeRef, transform, transition } =
+      useSortable({ id: id })
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+    }
+
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        className="mb-1 flex items-center rounded-md border border-[#111] bg-[#111111bf] px-4 py-2">
+        <Text margin={0} className="pr-2 text-center">
+          {id}
+        </Text>
         <Button
           padding={0.3}
           type="warning"
-          onClick={() => moveRight({ item: id, col })}
+          onClick={
+            col === 0
+              ? () => moveRight({ item: id, col })
+              : () => moveLeft({ item: id, col })
+          }
           scale={1 / 3}
           ghost
-          marginLeft={0.3}
-          icon={<ArrowRight />}
+          icon={col === 0 ? <ArrowRight /> : <ArrowLeft />}
           auto
         />
-      )}
-    </div>
-  )
-}
+        {col === 1 && (
+          <Button
+            padding={0.3}
+            type="warning"
+            onClick={() => moveRight({ item: id, col })}
+            scale={1 / 3}
+            ghost
+            marginLeft={0.3}
+            icon={<ArrowRight />}
+            auto
+          />
+        )}
+      </div>
+    )
+  }
+)
