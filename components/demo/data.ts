@@ -46,25 +46,80 @@ return (
   },
   reducer: {
     code: `
-const [items, setItems] = useState(["item", "item"])
+export default function ReducerExample() {
+  const [items, dispatch] = useReducer(itemReducer, initialItems)
 
-return (
-  <>
-    <div>
-      {items.map((item, i) =>
-        <div key={i}>{item}</div>
-      )}
-    </div>
-    <button onClick={() => {
-      const newItems = [...items]
-      newItems.push("item")
-      setItems(newItems)
-    }}>Add Item</button>
-  </>
-)
+  return (
+    <>
+      <Button
+        onClick={() =>
+          dispatch({ type: "add", id: nanoid(), color: createColor })
+        }>
+        Add Item
+      </Button>
+      <ButtonGroup>
+        ...
+      </ButtonGroup>
+      <div>
+        {items.map((item) => (
+          <Card key={item.id}>
+            <Text>Item</Text>
+            <Button
+              type={item.color}
+              icon={<RefreshCw />}
+              onClick={() => {
+                dispatch({ type: "edit", id: item.id, color: item.color })
+              }}
+            />
+            <Button
+              type={item.color}
+              icon={<Trash />}
+              onClick={() => {
+                dispatch({ type: "delete", id: item.id })
+              }}
+            />
+          </Card>
+        ))}
+      </div>
+    </>
+  )
+}
+
+const itemReducer = (items: ItemState[], action: Actions) => {
+  switch (action.type) {
+    case "add": {
+      return [
+        ...items,
+        {
+          id: action.id,
+          color: action.color,
+        },
+      ]
+    }
+    case "edit": {
+      return items.map((i) => {
+        if (i.id === action.id) {
+          return {
+            ...i,
+            color: action.color === "error" ? "success" : "error",
+          }
+        } else {
+          return i
+        }
+      })
+    }
+    case "delete": {
+      return items.filter((i) => i.id !== action.id)
+    }
+    default: {
+      throw Error("Unknown action")
+    }
+  }
+}
+    
   `,
-    heading: "Successful re-render",
-    desc: "Using the spread operator creates a deep copy of the object. Points to a new memory location.",
+    heading: "Consolidating state logic",
+    desc: "Reducers combine state change logic (different event handlers, etc.) into a single function, called by dispatches.",
   },
   kanban1: {
     code: `
