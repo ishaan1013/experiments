@@ -21,6 +21,7 @@ return (
   `,
     heading: "No re-render (object)",
     desc: "Creates a shallow copy pointing to the same memory location. No re-render since React considers it unchanged (same address).",
+    codeView: true,
   },
   refEq2: {
     code: `
@@ -43,6 +44,7 @@ return (
   `,
     heading: "Successful re-render",
     desc: "Using the spread operator creates a deep copy of the object. Points to a new memory location.",
+    codeView: true,
   },
   reducer: {
     code: `
@@ -120,11 +122,15 @@ const itemReducer = (items: ItemState[], action: Actions) => {
   `,
     heading: "State actions stored in a reducer",
     desc: "Reducers combine state change logic (different event handlers, etc.) into a single function, called by dispatches.",
+    codeView: false,
   },
   kanban1: {
     code: `
 const Board = () => {
   const [items, setItems] = useState([[1, 2, 3], [4, 5], [6]])
+
+  const moveLeft = ({ item, col }: {...}) => {...}
+  const moveRight = ({ item, col }: {...}) => {...}
 
   return (
     <DndContext
@@ -173,13 +179,17 @@ const Item = ({id, ...} : {id: number, ...}) => {
   )
 }
   `,
-    heading: "Re-renders entire board (expensive)",
+    heading: "Unoptimized, re-renders entire board",
     desc: "The entire board re-renders for all updates. Unaffected items/columns always re-render, but it's often unnecessary.",
+    codeView: true,
   },
   kanban2: {
     code: `
 const Board = () => {
   const [items, setItems] = useState([[1, 2, 3], [4, 5], [6]])
+
+  const moveLeft = ({ item, col }: {...}) => {...}
+  const moveRight = ({ item, col }: {...}) => {...}
 
   const items0 = useMemo(() => items[0], [items])
   const items1 = useMemo(() => items[1], [items])
@@ -242,11 +252,15 @@ const Item = ({id, ...} : {id: number, ...}) => {
   `,
     heading: "Memoizing components",
     desc: "Each column is memoized, stopping unnecessary re-renders. It takes an object prop, but memo() uses shallow comparison so it's not 'equal'. Using the useMemo hook caches the object correctly.",
+    codeView: false,
   },
   kanban3: {
     code: `
 const Board = () => {
   const [items, setItems] = useState([[1, 2, 3], [4, 5], [6]])
+
+  const moveLeft = useCallback(({ item, col }: {...}) => {...}, [])
+  const moveRight = useCallback(({ item, col }: {...}) => {...}, [])
 
   const items0 = useMemo(() => items[0], [items])
   const items1 = useMemo(() => items[1], [items])
@@ -308,7 +322,8 @@ const Item = ({id, ...} : {id: number, ...}) => {
 }
   `,
     heading: "Final optimization with useCallback",
-    desc: "",
+    desc: "Like how defining objects returns a new object each time, defining functions does the same. Callbacks are memoized functions.",
+    codeView: false,
   },
 }
 

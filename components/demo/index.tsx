@@ -10,7 +10,7 @@ import Reducer from "./reducer"
 import Kanban3 from "./kanban3"
 
 export default function Demo({ content }: contentOptions) {
-  const [viewingCode, setViewingCode] = useState(true)
+  const [viewingCode, setViewingCode] = useState(contents[content].codeView)
 
   return (
     <div className="relative z-0 w-full overflow-hidden lg:max-w-[50%]">

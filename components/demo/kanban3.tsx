@@ -52,7 +52,7 @@ export default function Kanban3() {
         return newItems
       })
     },
-    []
+    [items]
   )
 
   const moveRight = useCallback(
@@ -69,7 +69,7 @@ export default function Kanban3() {
         return newItems
       })
     },
-    []
+    [items]
   )
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -186,7 +186,7 @@ const Item = memo(
         </Text>
         <Button
           padding={0.3}
-          type="warning"
+          type="success"
           onClick={
             col === 0
               ? () => moveRight({ item: id, col })
@@ -200,7 +200,7 @@ const Item = memo(
         {col === 1 && (
           <Button
             padding={0.3}
-            type="warning"
+            type="success"
             onClick={() => moveRight({ item: id, col })}
             scale={1 / 3}
             ghost
