@@ -118,7 +118,7 @@ const itemReducer = (items: ItemState[], action: Actions) => {
 }
     
   `,
-    heading: "Consolidating state logic",
+    heading: "State actions stored in a reducer",
     desc: "Reducers combine state change logic (different event handlers, etc.) into a single function, called by dispatches.",
   },
   kanban1: {
@@ -240,13 +240,80 @@ const Item = ({id, ...} : {id: number, ...}) => {
   )
 }
   `,
-    heading: "Optimizing with memoization",
-    desc: "Each column is memoized to re-render only when directly updated. It takes an object prop, and memo() uses shallow comparison (the object won't be cached). The useMemo hook fixes this, and caches the object properly.",
+    heading: "Memoizing components",
+    desc: "Each column is memoized, stopping unnecessary re-renders. It takes an object prop, but memo() uses shallow comparison so it's not 'equal'. Using the useMemo hook caches the object correctly.",
+  },
+  kanban3: {
+    code: `
+const Board = () => {
+  const [items, setItems] = useState([[1, 2, 3], [4, 5], [6]])
+
+  const items0 = useMemo(() => items[0], [items])
+  const items1 = useMemo(() => items[1], [items])
+  const items2 = useMemo(() => items[2], [items])
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}>
+      <Col col={0} items={items0} moveLeft={moveLeft} moveRight={moveRight} />
+      <Col col={1} items={items1} moveLeft={moveLeft} moveRight={moveRight} />
+      <Col col={2} items={items2} moveLeft={moveLeft} moveRight={moveRight} />
+    </DndContext>
+  )
+}
+
+const Col = memo(
+  ({ items, col, moveLeft, moveRight }: { items: number[], col: 0 | 1 | 2, moveLeft: ({ item, col }: { item: number; col: 0 | 1 | 2 }) => void, moveRight: ({ item, col }: { item: number; col: 0 | 1 | 2 }) => void }) => {
+    return (
+      <Card>
+        <SortableContext items={items} >
+          {items.map((item) => (
+            <Item
+              id={item}
+              moveLeft={moveLeft}
+              moveRight={moveRight}
+              col={col}
+              key={item}
+            />
+          ))}
+        </SortableContext>
+      </Card>
+    )
+  }
+)
+
+const Item = ({id, ...} : {id: number, ...}) => {
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}>
+      <Text>
+        {id}
+      </Text>
+      <Button
+        onClick={...}
+        icon={... ? <ArrowRight /> : <ArrowLeft />}
+      />
+      <Button
+        onClick={...}
+        icon={... ? <ArrowRight /> : <ArrowLeft />}
+      />
+    </div>
+  )
+}
+  `,
+    heading: "Final optimization with useCallback",
+    desc: "",
   },
 }
 
 export type contentOptions = {
-  content: "refEq1" | "refEq2" | "kanban1" | "kanban2" | "reducer"
+  content: "refEq1" | "refEq2" | "kanban1" | "kanban2" | "kanban3" | "reducer"
 }
 
 export default contents

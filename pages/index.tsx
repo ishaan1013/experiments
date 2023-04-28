@@ -51,6 +51,7 @@ export default function Home() {
         </Text>
         <Section content="kanban1" />
         <Section content="kanban2" />
+        <Section content="kanban3" />
       </main>
       <footer className="flex w-full justify-center border-t border-t-[#111] pt-6">
         <div className="flex w-full max-w-screen-lg items-center justify-between">
